@@ -101,10 +101,9 @@ jobs:
                 - amd64
               sources:
                 - sourceline: "deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"
-              keys:
-                - "3B4FE6ACC0B21F32"
-                - "871920D1991BC93C"
-              keyserver: "keyserver.ubuntu.com"
+                  key_url: "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32"
+                - sourceline: "deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"
+                  key_url: "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x871920D1991BC93C"
               include:
                 - libc6
                 - libstdc++6
