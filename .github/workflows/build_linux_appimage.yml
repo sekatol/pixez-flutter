@@ -71,9 +71,27 @@ jobs:
 
       - name: 准备 AppDir 目录
         run: |
-          mkdir -p AppDir/usr
+          # 创建标准目录结构
+          mkdir -p AppDir/usr/bin
+          mkdir -p AppDir/usr/lib
+          mkdir -p AppDir/usr/share
+          # 复制 bundle 全部内容到 usr/
           cp -r build/linux/x64/release/bundle/* AppDir/usr/
+          # 将可执行文件移动到 usr/bin/
+          if [ -f "AppDir/usr/pixez" ]; then
+            mv AppDir/usr/pixez AppDir/usr/bin/
+          else
+            echo "错误：找不到可执行文件 pixez"
+            exit 1
+          fi
+          # 可选：将 data 目录移动到标准位置（取决于程序是否从固定路径读取）
+          if [ -d "AppDir/usr/data" ]; then
+            mv AppDir/usr/data AppDir/usr/share/pixez
+          fi
+          # 创建 AppRun 符号链接
           ln -s usr/bin/pixez AppDir/AppRun
+          # 确保可执行权限
+          chmod +x AppDir/usr/bin/pixez
 
       - name: 生成 AppImageBuilder 配置
         run: |
@@ -88,7 +106,8 @@ jobs:
             app_info:
               id: com.example.pixez
               name: PixEz
-              icon: usr/share/icons/hicolor/256x256/apps/pixez.png
+              # 图标路径暂时注释，避免因缺少图标而失败（项目可能没有这个图标）
+              # icon: usr/share/icons/hicolor/256x256/apps/pixez.png
               version: ${{ steps.gitversion.outputs.majorMinorPatch }}
               exec: usr/bin/pixez
               exec_args: "\$@"
