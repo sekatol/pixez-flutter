@@ -76,16 +76,6 @@ jobs:
           # 将可执行文件链接到 AppDir 根目录（可选）
           ln -s usr/bin/pixez AppDir/AppRun
 
-      - name: 下载 appimagetool
-        run: |
-          wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-          chmod +x appimagetool-x86_64.AppImage
-
-      - name: 下载 appimage-builder
-        run: |
-          wget -c "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.1.0/appimage-builder-1.1.0-x86_64.AppImage"
-          chmod +x appimage-builder-1.1.0-x86_64.AppImage
-
       - name: 生成 AppImageBuilder 配置
         run: |
           cat > AppImageBuilder.yml <<EOF
@@ -135,8 +125,9 @@ jobs:
           EOF
 
       - name: 构建 AppImage
-        run: |
-          ./appimage-builder-1.1.0-x86_64.AppImage --recipe AppImageBuilder.yml
+        uses: AppImageCrafters/build-appimage-action@v1
+        with:
+          recipe: AppImageBuilder.yml
 
       - name: 重命名 AppImage 文件
         run: |
